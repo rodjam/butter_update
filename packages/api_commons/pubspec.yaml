@@ -10,7 +10,10 @@ environment:
 
 dependencies:
   butter_commons:
-    git: https://github.com/rodJam/butter_update.git
+    git: 
+      url: https://github.com/rodJam/butter_update.git
+      ref: temp
+      path: "packages/api_commons"
   collection: ^1.18.0
   conduit: ^5.1.3
   conduit_common: ^5.1.3
