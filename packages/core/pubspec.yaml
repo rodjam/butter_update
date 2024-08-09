@@ -12,7 +12,7 @@ environment:
 dependencies:
  butter_commons:
     git: 
-      url: https://github.com/rodJam/butter_update.git
+      url: https://github.com/rodjam/butter_update.git
       ref: temp
       path: "packages/commons"
  flutter:
