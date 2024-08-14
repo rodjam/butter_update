@@ -85,12 +85,14 @@ class ReducerQuery<T extends ManagedObject> implements QueryReduceOperation<T> {
     final rawQuery = buffer.toString();
     // ignore: avoid_print
     print(rawQuery);
+    // ignore: avoid_print
+    print(builder.variables);
 
     final store = _query.context.persistentStore as PostgreSQLPersistentStore;
-    final connection = await store.executionContext;
+    // final connection = await store.executionContext;
     try {
-      final result = await connection.execute(rawQuery,
-          parameters: builder.variables,
+      final result = await store.execute(rawQuery,
+          substitutionValues: builder.variables,
           timeout: Duration(seconds: _query.timeoutInSeconds));
       return (returnAllFields ? result.first : result.first.first) as U?;
     } on TimeoutException catch (e) {
@@ -125,10 +127,10 @@ class ReducerQuery<T extends ManagedObject> implements QueryReduceOperation<T> {
     print(rawQuery);
 
     final store = _query.context.persistentStore as PostgreSQLPersistentStore;
-    final connection = await store.executionContext;
+    // final connection = await store.executionContext;
     try {
-      return await connection.execute(rawQuery,
-          parameters: builder.variables,
+      return await store.execute(rawQuery,
+          substitutionValues: builder.variables,
           timeout: Duration(seconds: _query.timeoutInSeconds));
     } on TimeoutException catch (e) {
       throw QueryException.transport('timed out connecting to database',
