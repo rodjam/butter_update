@@ -12,7 +12,7 @@ dependencies:
   butter_commons:
     git: 
       url: https://github.com/rodjam/butter_update.git
-      ref: temp
+      ref: flutter_3.38.3
       path: "packages/commons"
   collection: ^1.18.0
   conduit: ^5.1.3

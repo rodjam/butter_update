@@ -13,7 +13,7 @@ dependencies:
  butter_commons:
     git: 
       url: https://github.com/rodjam/butter_update.git
-      ref: temp
+      ref: flutter_3.38.3
       path: "packages/commons"
  flutter:
     sdk: flutter
@@ -28,7 +28,7 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter.
-flutter:
+# flutter:
 
   # To add assets to your package, add an assets section, like this:
   # assets:
