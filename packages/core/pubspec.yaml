@@ -11,9 +11,9 @@ environment:
 
 dependencies:
  butter_commons:
-    git: 
+    git:
       url: https://github.com/rodjam/butter_update.git
-      ref: flutter_3.38.3
+      ref: request_issue
       path: "packages/commons"
  flutter:
     sdk: flutter

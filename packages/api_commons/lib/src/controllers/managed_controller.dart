@@ -59,7 +59,54 @@ class ManagedController<InstanceType extends ManagedObject>
 
   ManagedEntity? entity;
   ManagedContext? _context;
-  Map<String, String> params = {};
+
+  //
+  // Per-request state.
+  //
+  // Controllers are linked into the router with `.link(() => this)`, so one
+  // instance serves every request on its route. Conduit stores the current
+  // request on the instance, and requests interleave at every `await`, so a
+  // plain field would let one request read another user's request (and with
+  // it their auth owner, body, path variables and params). Each call to
+  // [handle] therefore runs in its own zone, and [request] and [params] read
+  // and write state held by that zone instead of by the instance.
+  //
+  static final Object _scopeKey = Object();
+
+  _RequestScope? get _scope => Zone.current[_scopeKey] as _RequestScope?;
+
+  Request? _unscopedRequest;
+  Map<String, String> _unscopedParams = {};
+
+  @override
+  Request? get request => _scope != null ? _scope!.request : _unscopedRequest;
+
+  @override
+  set request(Request? value) {
+    final scope = _scope;
+    if (scope != null) {
+      scope.request = value;
+    } else {
+      _unscopedRequest = value;
+    }
+  }
+
+  Map<String, String> get params => _scope?.params ?? _unscopedParams;
+
+  set params(Map<String, String> value) {
+    final scope = _scope;
+    if (scope != null) {
+      scope.params = value;
+    } else {
+      _unscopedParams = value;
+    }
+  }
+
+  @override
+  FutureOr<RequestOrResponse> handle(Request request) => runZoned(
+        () => super.handle(request),
+        zoneValues: {_scopeKey: _RequestScope()},
+      );
 
   /// Returns a route pattern for using [ManagedObjectController]s.
   ///
@@ -267,7 +314,6 @@ class ManagedController<InstanceType extends ManagedObject>
     // Parameters that doesn't fall under the recognized purposes
     @Bind.query('params') List<String>? params,
   }) async {
-
     late final Map<String, dynamic> body;
     try {
       _loadParams(params, id: id);
@@ -736,4 +782,10 @@ class ManagedController<InstanceType extends ManagedObject>
 
     super.documentComponents(context);
   }
+}
+
+/// State that belongs to a single request handled by a [ManagedController].
+class _RequestScope {
+  Request? request;
+  Map<String, String> params = {};
 }

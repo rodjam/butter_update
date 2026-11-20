@@ -10,9 +10,9 @@ environment:
 
 dependencies:
   butter_commons:
-    git: 
+    git:
       url: https://github.com/rodjam/butter_update.git
-      ref: flutter_3.38.3
+      ref: request_issue
       path: "packages/commons"
   collection: ^1.18.0
   conduit: ^6.0.0
